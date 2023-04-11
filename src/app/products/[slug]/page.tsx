@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getProduct, getProducts } from "@/service/products";
-
+import Image from "next/image";
 // export const revalidate = 3;
 
 
@@ -17,13 +17,18 @@ export function generateMetadata({ params }: Props) {
     }
 }
 
-export default async function ProductPage({ params: {slug} }: Props) {
+export default async function ProductPage({ params: { slug } }: Props) {
     const product = await getProduct(slug);
     // 서버 파일에 있는 데이터 중 해당 제품의 정보를 찾아서 그걸 보여줌
-    if (!product){
+    if (!product) {
         notFound();
     }
-    return <h1>{product.name} 제품 설명!</h1>;
+    return (
+        <>
+            <h1>{product.name}</h1>
+            <Image src={`/images/${product.image}`} alt={product.name} width='300' height='300'/>
+        </>
+    );
 }
 
 export async function generateStaticParams() {
