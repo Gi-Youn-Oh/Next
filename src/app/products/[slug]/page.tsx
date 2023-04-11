@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getProduct, getProducts } from "@/service/products";
 
 // props는 param객체를 가지고 있고, param객체는 slug폴더명을 가지고 있다.
 type Props = {
@@ -13,16 +14,19 @@ export function generateMetadata({ params }: Props) {
     }
 }
 
-export default function PantsPage({ params }: Props) {
-    if(params.slug === 'nothing') {
+export default async function ProductPage({ params: {slug} }: Props) {
+    const product = await getProduct(slug);
+    // 서버 파일에 있는 데이터 중 해당 제품의 정보를 찾아서 그걸 보여줌
+    if (!product){
         notFound();
     }
-    return <h1>{params.slug} 제품 설명!</h1>;
+    return <h1>{product.name} 제품 설명!</h1>;
 }
 
-export function generateStaticParams() {
-    const products = ['pants', 'skirt'];
+export async function generateStaticParams() {
+    // 모든 제품의 페이지들을 미리 만들어 둘 수 있게 해줄거임 (SSG)
+    const products = await getProducts();
     return products.map(product => ({
-        slug: product
+        slug: product.id
     }))
 }
