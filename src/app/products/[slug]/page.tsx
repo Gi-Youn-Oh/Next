@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import { getProduct, getProducts } from "@/service/products";
 
+// export const revalidate = 3;
+
+
 // props는 param객체를 가지고 있고, param객체는 slug폴더명을 가지고 있다.
 type Props = {
     params: {
